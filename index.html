@@ -1,420 +1,866 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thiago Henrique Santos - Portfólio</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfólio Thiago Santos</title>
+<meta name="description" content="Thiago Santos, desenvolvedor backend Java em São Bernardo do Campo, SP. APIs com Java 21, Spring Boot 3, PostgreSQL e Docker, com experiência em monitoramento e suporte de sistemas em produção.">
+<meta property="og:title" content="Thiago Santos · Desenvolvedor Backend Java">
+<meta property="og:description" content="APIs com Java 21, Spring Boot 3, PostgreSQL e Docker. Pós em Arquitetura Java na FIAP. Experiência em monitoramento de sistemas financeiros.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: página única escura, tipografia gigante em caixa alta com "/" (herdada da referência),
+   e uma camada de "painel de monitoramento" (terminal, status, fluxos) que conta a origem do Thiago em produção. */
+:root{
+  --bg:#0b0f14;
+  --surface:#131a22;
+  --ink:#e9eef3;
+  --muted:#8d9aab;
+  --line:rgba(200,216,232,.12);
+  --accent:#5b9dff;
+  --accent-deep:#2d6ae0;
+  --ok:#3fd68f;
+  --warn:#f2b544;
+  --font-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-mono:"Geist Mono", "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --gutter:clamp(16px, 4vw, 56px);
+  --radius:22px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-display);font-size:17px;line-height:1.55;font-optical-sizing:auto;overflow-x:hidden}
+a{color:inherit}
+img{max-width:100%}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+.mono{font-family:var(--font-mono);font-size:.82rem;letter-spacing:.02em}
+.skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:#fff;padding:8px 14px;border-radius:999px;z-index:99}
+.skip:focus{left:8px}
+#stars{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.75}
+main,header,footer{position:relative;z-index:1}
+.wrap{width:100%;max-width:1320px;margin:0 auto;padding:0 var(--gutter)}
+
+/* ---------- header ---------- */
+.top{position:fixed;top:0;left:0;right:0;z-index:30;padding:14px 0;transition:background .3s, border-color .3s;border-bottom:1px solid transparent}
+.top.scrolled{background:rgba(11,15,20,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-color:var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-family:var(--font-mono);font-weight:500;text-decoration:none;font-size:.95rem;white-space:nowrap}
+.logo b{color:var(--accent);font-weight:500}
+.nav{display:flex;gap:4px}
+.nav a{text-decoration:none;font-size:.9rem;color:var(--muted);padding:8px 12px;border-radius:999px;transition:color .2s, background .2s}
+.nav a:hover,.nav a.on{color:var(--ink);background:rgba(91,157,255,.16)}
+.avail{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:.74rem;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:7px 12px;white-space:nowrap;text-decoration:none}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(63,214,143,.6);animation:ping 2.2s infinite;flex:none}
+.dot.warn{background:var(--warn);animation:none}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(63,214,143,.55)}70%{box-shadow:0 0 0 9px rgba(63,214,143,0)}100%{box-shadow:0 0 0 0 rgba(63,214,143,0)}}
+.menu-btn{display:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;align-items:center;justify-content:center}
+.menu-btn span{display:block;width:16px;height:1.5px;background:currentColor;position:relative}
+.menu-btn span::before,.menu-btn span::after{content:"";position:absolute;left:0;width:16px;height:1.5px;background:currentColor}
+.menu-btn span::before{top:-5px}.menu-btn span::after{top:5px}
+@media (max-width:900px){
+  .nav{display:none;position:absolute;top:64px;right:var(--gutter);flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:8px;min-width:200px}
+  .nav.open{display:flex}
+  .nav a{padding:12px 14px}
+  .menu-btn{display:inline-flex}
+  .avail .txt-long{display:none}
+}
+
+/* ---------- hero ---------- */
+.hero{padding:110px 0 40px}
+.hero-panel{position:relative;border:1px solid var(--line);border-radius:28px;padding:clamp(22px,4vw,48px);overflow:hidden;
+  background:
+    radial-gradient(60% 70% at 85% 10%, rgba(91,157,255,.30), transparent 70%),
+    radial-gradient(50% 60% at 0% 100%, rgba(45,106,224,.22), transparent 70%),
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0/100% 56px,
+    linear-gradient(90deg, rgba(214,226,240,.05) 1px, transparent 1px) 0 0/56px 100%,
+    #0e141b}
+.eyebrow{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;color:var(--muted)}
+.hero h1{font-weight:800;text-transform:uppercase;line-height:.84;letter-spacing:-.02em;font-size:clamp(3.4rem, 13.5vw, 11.5rem);margin:22px 0 26px}
+.hero h1 .l2{display:block;color:var(--accent)}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,4vw,56px);align-items:end}
+.role{font-size:clamp(1.25rem,2.2vw,1.6rem);font-weight:600;line-height:1.25}
+.role small{display:block;font-weight:400;color:var(--muted);font-size:.95rem;margin-top:6px}
+.lead{color:#d3dbe4;max-width:56ch;margin-top:18px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--font-mono);font-size:.78rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;border-radius:999px;padding:16px 26px;border:1px solid transparent;cursor:pointer;transition:transform .2s, box-shadow .2s, background .2s}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.18) inset, 0 10px 40px -10px rgba(91,157,255,.8)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(255,255,255,.28) inset, 0 16px 50px -10px rgba(91,157,255,.95)}
+.btn-ghost{border-color:var(--line);color:var(--ink);background:rgba(19,26,34,.6)}
+.btn-ghost:hover{border-color:var(--accent)}
+.socials{display:inline-flex;gap:6px;padding:6px;border:1px solid var(--line);border-radius:16px;background:rgba(19,26,34,.6)}
+.icon-btn{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:11px;color:var(--ink);background:rgba(214,226,240,.06);transition:background .2s, color .2s}
+.icon-btn:hover{background:var(--accent);color:#fff}
+.icon-btn svg{width:19px;height:19px}
+.stats{display:flex;flex-wrap:wrap;gap:12px 34px;margin-top:30px}
+.stat b{display:block;font-size:2rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{display:block;margin-top:6px;color:var(--muted);text-transform:uppercase;font-size:.66rem;letter-spacing:.14em;font-family:var(--font-mono)}
+
+.term{background:rgba(11,15,20,.88);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+.term-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);color:var(--muted)}
+.term-bar .lights{display:flex;gap:6px}
+.term-bar .lights i{width:10px;height:10px;border-radius:50%;background:#263240}
+.term pre{margin:0;padding:18px 18px 20px;font-family:var(--font-mono);font-size:.8rem;line-height:1.7;overflow-x:auto;color:#d3dbe4}
+.t-mute{color:#66758a}.t-ok{color:var(--ok)}.t-key{color:#8fbcff}.t-str{color:#f2f3f4}.t-bool{color:var(--warn)}
+.cursor{display:inline-block;width:8px;height:1em;background:var(--accent);vertical-align:-2px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+@media (max-width:900px){.hero-grid{grid-template-columns:1fr}}
+
+/* ---------- section scaffolding ---------- */
+section{padding:clamp(70px,10vw,130px) 0}
+.surface{background:var(--surface)}
+.rounded-b{border-radius:0 0 40px 40px}
+.big{font-weight:800;text-transform:uppercase;line-height:.9;letter-spacing:-.02em;font-size:clamp(2.6rem,8.6vw,6.6rem)}
+.big em{font-style:normal;color:var(--accent)}
+.big .slash{color:var(--muted);font-weight:300}
+.intro{display:grid;grid-template-columns:minmax(140px,1fr) 2.2fr;gap:24px;margin-top:clamp(28px,4vw,48px)}
+.label{font-family:var(--font-mono);font-size:.76rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;padding-top:6px}
+.intro p{font-size:clamp(1.15rem,2vw,1.55rem);line-height:1.45;font-weight:500;max-width:34ch;color:#e2e8ef}
+@media (max-width:700px){.intro{grid-template-columns:1fr;gap:10px}}
+
+/* ---------- services ---------- */
+.svc{border-top:1px solid var(--line);padding:clamp(28px,4vw,44px) 0;display:grid;grid-template-columns:1.1fr 1fr;gap:20px 48px}
+.svc:last-child{border-bottom:1px solid var(--line)}
+.svc h3{grid-column:1/-1;font-size:clamp(1.7rem,3.6vw,2.7rem);font-weight:650;line-height:1.1}
+.svc h3 .n{font-family:var(--font-mono);font-weight:400;font-size:.5em;color:var(--accent);vertical-align:.45em;margin-right:12px;letter-spacing:.05em}
+.svc > p{color:var(--muted);max-width:46ch}
+.svc ul{list-style:none;margin:0;padding:0}
+.svc li{display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--line);font-size:1.15rem;font-weight:600}
+.svc li:first-child{padding-top:0}
+.svc li:last-child{border-bottom:0}
+.svc li i{font-style:normal;font-family:var(--font-mono);font-size:.72rem;color:var(--accent);font-weight:400}
+@media (max-width:760px){.svc{grid-template-columns:1fr}}
+
+/* ---------- marquee ---------- */
+.marquee{padding:clamp(26px,4vw,46px) 0;overflow:hidden;border-block:1px solid var(--line);background:var(--bg)}
+.marquee-track{display:flex;width:max-content;animation:slide 38s linear infinite}
+.marquee-track span{font-size:clamp(2.6rem,7vw,5.5rem);font-weight:800;text-transform:uppercase;white-space:nowrap;padding-right:.5em;color:transparent;-webkit-text-stroke:1.2px rgba(214,226,240,.42);line-height:1}
+.marquee-track span b{color:var(--accent);-webkit-text-stroke:0;font-weight:800}
+@keyframes slide{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.marquee-track{animation:none}}
+
+/* ---------- experience ---------- */
+.timeline{position:relative;margin-top:clamp(36px,5vw,64px);padding-left:34px}
+.timeline::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--accent),rgba(91,157,255,.15))}
+.job{position:relative;padding-bottom:clamp(36px,5vw,56px);display:grid;grid-template-columns:240px 1fr;gap:10px 40px}
+.job:last-child{padding-bottom:0}
+.job::before{content:"";position:absolute;left:-33px;top:7px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+.job.now::before{background:var(--accent);box-shadow:0 0 0 6px rgba(91,157,255,.2)}
+.job .when{font-weight:700;font-size:1.2rem;font-variant-numeric:tabular-nums}
+.job .where{color:var(--muted);font-family:var(--font-mono);font-size:.78rem;margin-top:4px;letter-spacing:.04em}
+.job h3{font-size:clamp(1.35rem,2.6vw,1.8rem);font-weight:650;line-height:1.15}
+.job .co{color:var(--accent);font-weight:600;margin-top:2px}
+.job ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:10px;max-width:68ch}
+.job li{position:relative;padding-left:20px;color:#c9d2dc}
+.job li::before{content:"";position:absolute;left:0;top:.68em;width:7px;height:7px;border-radius:2px;background:var(--accent)}
+@media (max-width:760px){.job{grid-template-columns:1fr}}
+
+/* ---------- projects ---------- */
+.projects{display:grid;gap:28px;margin-top:clamp(36px,5vw,60px)}
+.proj{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(22px,3vw,40px);background:#111820;border:1px solid var(--line);border-radius:28px;padding:clamp(22px,3.4vw,40px);overflow:hidden}
+.proj::after{content:"";position:absolute;inset:auto -20% -60% auto;width:60%;height:120%;background:radial-gradient(closest-side, rgba(91,157,255,.18), transparent);pointer-events:none}
+@media (min-width:1000px){
+  .proj{position:sticky;top:96px}
+  .proj:nth-child(2){top:116px}
+  .proj:nth-child(3){top:136px}
+}
+.proj-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;color:var(--muted)}
+.proj h3{font-size:clamp(2rem,4.4vw,3.5rem);font-weight:800;text-transform:uppercase;line-height:.95;letter-spacing:-.015em;margin:16px 0 6px}
+.proj .tag{font-size:1.1rem;font-weight:600;color:#e2e8ef}
+.proj p.desc{color:#c3ccd7;margin-top:16px;max-width:58ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chip{font-family:var(--font-mono);font-size:.72rem;padding:6px 11px;border-radius:999px;border:1px solid var(--line);color:#d3dbe4;background:rgba(214,226,240,.04)}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.link{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:var(--font-mono);font-size:.76rem;letter-spacing:.06em;padding:10px 16px;border-radius:999px;border:1px solid var(--line);transition:border-color .2s, background .2s}
+.link:hover{border-color:var(--accent);background:rgba(91,157,255,.14)}
+.link svg{width:15px;height:15px}
+.hint{display:block;color:#738295;font-size:.78rem;margin-top:10px}
+
+.panel{position:relative;z-index:1;align-self:stretch;display:flex;flex-direction:column;background:rgba(11,15,20,.9);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.panel-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.panel-top .svc-name{font-family:var(--font-mono);font-size:.82rem}
+.pill{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(63,214,143,.12);color:var(--ok);white-space:nowrap}
+.pill.warn{background:rgba(242,181,68,.12);color:var(--warn)}
+.pill.info{background:rgba(91,157,255,.16);color:#a9c9ff}
+.pill .dot{width:7px;height:7px}
+.kv{margin:0;padding:6px 16px}
+.kv div{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(214,226,240,.09);font-family:var(--font-mono);font-size:.76rem}
+.kv div:last-child{border-bottom:0}
+.kv dt{color:#738295}
+.kv dd{margin:0;color:#e2e8ef}
+.flow{margin-top:auto;padding:14px 16px 16px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-family:var(--font-mono);font-size:.7rem;color:var(--muted)}
+.flow .step{padding:5px 9px;border-radius:8px;background:rgba(214,226,240,.05);color:#d3dbe4}
+.flow .arr{color:var(--accent)}
+@media (max-width:900px){.proj{grid-template-columns:1fr}}
+
+.more{margin-top:clamp(56px,7vw,90px)}
+.more h3{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:700;text-transform:uppercase;display:flex;align-items:center;gap:14px}
+.more h3::before{content:"*";color:var(--accent);font-weight:400}
+.row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.6fr) 140px 60px;gap:18px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line);transition:background .2s, padding .2s}
+.rows{margin-top:22px;border-top:1px solid var(--line)}
+.row:hover{background:rgba(91,157,255,.07);padding-left:12px;padding-right:12px}
+.row .nm{font-size:1.2rem;font-weight:650;line-height:1.25}
+.row .ds{color:var(--muted)}
+.row .tc{font-family:var(--font-mono);font-size:.72rem;color:#a9c9ff}
+.row .yr{font-family:var(--font-mono);font-size:.76rem;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:860px){.row{grid-template-columns:1fr auto}.row .ds{grid-column:1/-1}.row .tc{grid-column:1/-1}.row .yr{grid-row:1;grid-column:2}}
+
+/* ---------- about ---------- */
+.about-grid{display:grid;grid-template-columns:minmax(140px,1fr) 2.2fr;gap:24px;margin-top:clamp(30px,4vw,52px)}
+.about-body{display:grid;gap:20px;max-width:64ch}
+.about-body p{color:#c9d2dc;font-size:1.08rem}
+.about-body p.first{font-size:clamp(1.2rem,2.1vw,1.6rem);font-weight:500;color:var(--ink);line-height:1.4}
+.edu{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:clamp(40px,5vw,64px)}
+.edu article{border:1px solid var(--line);border-radius:var(--radius);padding:22px;background:rgba(19,26,34,.55);display:flex;flex-direction:column;gap:8px}
+.edu .yr{font-family:var(--font-mono);font-size:.74rem;color:var(--accent);letter-spacing:.06em}
+.edu h4{margin:0;font-size:1.15rem;font-weight:650;line-height:1.25}
+.edu p{color:var(--muted);font-size:.93rem}
+@media (max-width:700px){.about-grid{grid-template-columns:1fr;gap:10px}}
+
+/* ---------- stack ---------- */
+.stack-head{display:flex;align-items:center;gap:14px;font-size:clamp(1.8rem,3.6vw,2.4rem);font-weight:800;text-transform:uppercase}
+.stack-head::before{content:"*";color:var(--accent);font-weight:400}
+.stack-head em{font-style:normal;color:var(--accent)}
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:clamp(28px,4vw,48px) clamp(24px,4vw,56px);margin-top:clamp(30px,4vw,52px)}
+.group h4{margin:0 0 16px;font-family:var(--font-mono);font-weight:500;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.tools{display:flex;flex-wrap:wrap;gap:10px}
+.tool{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:1.02rem;padding:9px 14px 9px 10px;border-radius:12px;background:rgba(11,15,20,.55);border:1px solid var(--line)}
+.tool i{width:24px;height:24px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-family:var(--font-mono);font-size:.62rem;font-weight:500;color:#fff;background:var(--c,#3a3c4d);flex:none}
+.tool.soft{color:var(--muted);font-weight:500}
+
+/* ---------- contact ---------- */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,80px);margin-top:clamp(30px,4vw,52px)}
+.contact-info{display:grid;gap:26px;align-content:start}
+.contact-info p.lede{color:#c9d2dc;font-size:1.12rem;max-width:44ch}
+.ci h4{margin:0 0 6px;font-family:var(--font-mono);font-size:.74rem;font-weight:500;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+.ci a,.ci span{font-size:clamp(1.1rem,2vw,1.4rem);font-weight:600;text-decoration:none;word-break:break-word}
+.ci a:hover{color:var(--accent)}
+.copy{margin-left:10px;font-family:var(--font-mono);font-size:.7rem;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;vertical-align:middle}
+.copy:hover{color:var(--ink);border-color:var(--accent)}
+form{display:grid;gap:22px;align-content:start}
+.field{display:grid;gap:8px}
+.field label{font-family:var(--font-mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.field input,.field textarea{font:inherit;font-size:1.05rem;color:var(--ink);background:transparent;border:0;border-bottom:1px solid rgba(214,226,240,.25);padding:10px 2px;outline:none;transition:border-color .2s}
+.field textarea{min-height:120px;resize:vertical}
+.field input:focus,.field textarea:focus{border-color:var(--accent)}
+.form-note{font-size:.88rem;color:var(--muted);min-height:1.4em}
+@media (max-width:820px){.contact-grid{grid-template-columns:1fr}}
+
+/* ---------- footer ---------- */
+footer{background:var(--surface);overflow:hidden;padding:clamp(80px,10vw,140px) 0 40px;border-top:1px solid var(--line)}
+.ghost{position:absolute;top:10px;left:0;right:0;text-align:center;white-space:nowrap;font-size:clamp(4rem,17vw,15rem);font-weight:800;text-transform:uppercase;line-height:.8;color:rgba(214,226,240,.035);pointer-events:none;letter-spacing:-.02em}
+.foot-grid{position:relative;display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:end}
+.foot-big{font-size:clamp(2.5rem,7vw,5.6rem);font-weight:800;text-transform:uppercase;line-height:.92;letter-spacing:-.02em}
+.foot-big span{display:block;color:var(--accent)}
+.foot-side{display:grid;gap:24px}
+.foot-side h4{margin:0 0 10px;font-family:var(--font-mono);font-size:.72rem;font-weight:500;letter-spacing:.16em;color:var(--accent);text-transform:uppercase}
+.foot-links{display:flex;gap:8px}
+.foot-bottom{position:relative;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:clamp(50px,7vw,90px);padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+.foot-bottom .mono{color:#a9c9ff}
+@media (max-width:820px){.foot-grid{grid-template-columns:1fr}}
+
+.to-top{position:fixed;right:18px;bottom:18px;z-index:40;width:48px;height:48px;border-radius:50%;border:0;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 10px 30px -8px rgba(91,157,255,.9);transform:translateY(90px);transition:transform .3s}
+.to-top.show{transform:none}
+.to-top svg{width:20px;height:20px}
+</style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <h2>Thiago Santos</h2>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="#home" class="nav-link">Início</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#about" class="nav-link">Sobre</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#projects" class="nav-link">Projetos</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#skills" class="nav-link">Habilidades</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#contact" class="nav-link">Contato</a>
-                </li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<canvas id="stars" aria-hidden="true"></canvas>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="logo" href="#inicio" aria-label="Início">~/<b>thiago</b>.santos</a>
+    <nav class="nav" id="nav" aria-label="Seções">
+      <a href="#servicos">O que faço</a>
+      <a href="#experiencia">Experiência</a>
+      <a href="#projetos">Projetos</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#contato">Contato</a>
     </nav>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a class="avail" href="#contato"><span class="dot"></span><span>Disponível<span class="txt-long"> para vagas</span></span></a>
+      <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav"><span></span></button>
+    </div>
+  </div>
+</header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <!-- Floating Particles -->
-        <div class="particles">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-        </div>
-        
-        <!-- Floating Code Elements -->
-        <div class="floating-elements">
-            <div class="code-element">&lt;div&gt;</div>
-            <div class="code-element">{ }</div>
-            <div class="code-element">function()</div>
-            <div class="code-element">import</div>
-            <div class="code-element">class</div>
-            <div class="code-element">const</div>
-            <div class="code-element">if()</div>
-            <div class="code-element">return</div>
-            <div class="code-element">Java</div>
-            <div class="code-element">Python</div>
-            <div class="code-element">JavaScript</div>
-            <div class="code-element">MySQL</div>
-        </div>
-        
-        <!-- Tech Icons -->
-        <div class="tech-icons">
-            <div class="tech-icon">💻</div>
-            <div class="tech-icon">⚡</div>
-            <div class="tech-icon">🔧</div>
-            <div class="tech-icon">🚀</div>
-            <div class="tech-icon">💡</div>
-            <div class="tech-icon">🎯</div>
-            <div class="tech-icon">🔥</div>
-            <div class="tech-icon">⚙️</div>
-            <div class="tech-icon">🎨</div>
-            <div class="tech-icon">📱</div>
-            <div class="tech-icon">🌐</div>
-            <div class="tech-icon">💾</div>
-            <div class="tech-icon">🔒</div>
-            <div class="tech-icon">📊</div>
-            <div class="tech-icon">🎮</div>
-            <div class="tech-icon">🤖</div>
-            <div class="tech-icon">📈</div>
-            <div class="tech-icon">⚡</div>
-            <div class="tech-icon">🎪</div>
-            <div class="tech-icon">🌟</div>
-        </div>
-        
-        <!-- Floating Emojis -->
-        <div class="floating-emojis">
-            <div class="emoji-float">👨‍💻</div>
-            <div class="emoji-float">💻</div>
-            <div class="emoji-float">⚡</div>
-            <div class="emoji-float">🚀</div>
-            <div class="emoji-float">💡</div>
-            <div class="emoji-float">🔧</div>
-            <div class="emoji-float">🎯</div>
-            <div class="emoji-float">🔥</div>
-            <div class="emoji-float">⚙️</div>
-            <div class="emoji-float">🎨</div>
-            <div class="emoji-float">📱</div>
-            <div class="emoji-float">🌐</div>
-            <div class="emoji-float">💾</div>
-            <div class="emoji-float">🔒</div>
-            <div class="emoji-float">📊</div>
-            <div class="emoji-float">🎮</div>
-            <div class="emoji-float">🤖</div>
-            <div class="emoji-float">📈</div>
-            <div class="emoji-float">🎪</div>
-            <div class="emoji-float">🌟</div>
-        </div>
-        
-        <div class="hero-container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    Olá, eu sou <span class="highlight">Thiago Henrique Santos</span>
-                </h1>
-                <p class="hero-subtitle">
-                    Desenvolvedor Full Stack | Java | Python | JavaScript | MySQL
-                </p>
-                <p class="hero-description">
-                    Apaixonado por tecnologia e desenvolvimento de soluções inovadoras. 
-                    Especializado em desenvolvimento web e mobile com foco em qualidade e performance.
-                </p>
-                <div class="hero-buttons">
-                    <a href="#projects" class="btn btn-primary">Ver Projetos</a>
-                    <a href="#contact" class="btn btn-secondary">Contato</a>
-                </div>
-                <div class="social-links">
-                    <a href="https://github.com/thibrown1" target="_blank" class="social-link">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://www.linkedin.com/in/thiago-henrique-santos-000735277/" target="_blank" class="social-link">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="mailto:thiagohmssantos@gmail.com" class="social-link">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                </div>
+<main id="conteudo">
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="inicio">
+  <div class="wrap">
+    <div class="hero-panel">
+      <div class="eyebrow mono">
+        <span>( DESENVOLVEDOR BACKEND JAVA )</span>
+        <span>São Bernardo do Campo, SP</span>
+      </div>
+      <h1>Thiago<span class="l2">Santos</span></h1>
+
+      <div class="hero-grid">
+        <div>
+          <p class="role">APIs em Java e Spring Boot, com olhar de quem já cuidou de sistema em produção.
+            <small>Pós em Arquitetura e Desenvolvimento Java na FIAP · Analista de Monitoramento na NTT DATA</small></p>
+          <p class="lead">Passei os últimos anos do lado de quem recebe o alerta: suporte N2, SQL Server, incidentes e monitoramento de transações financeiras. Hoje escrevo o código do outro lado, com testes, logs que ajudam e deploy que não assusta.</p>
+
+          <div class="ctas">
+            <a class="btn btn-primary" href="#projetos">Ver projetos</a>
+            <a class="btn btn-ghost" id="cvBtn" href="#" hidden>Baixar CV</a>
+            <div class="socials">
+              <a class="icon-btn" href="https://github.com/thibrown1" target="_blank" rel="noopener" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+              </a>
+              <a class="icon-btn" href="https://www.linkedin.com/in/thiago-santos-000735277" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+              </a>
+              <a class="icon-btn" href="mailto:thiagohmssantos@gmail.com" aria-label="E-mail">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
+              </a>
             </div>
-            <div class="hero-image">
-                <div class="profile-card">
-                    <div class="profile-image">
-                        <div class="profile-photo">
-                            <img src="thiago-aws-summit.jpg" alt="Thiago Henrique Santos - Desenvolvedor Full Stack" class="profile-img">
-                            <div class="profile-overlay">
-                                <div class="profile-icon">👨‍💻</div>
-                            </div>
-                        </div>
-                    </div>
-                    <h3>Thiago Santos</h3>
-                    <p>Full Stack Developer</p>
-                </div>
-            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat"><b>+2</b><span>anos em TI</span></div>
+            <div class="stat"><b>3</b><span>APIs Java no GitHub</span></div>
+            <div class="stat"><b>+9</b><span>projetos construídos</span></div>
+          </div>
         </div>
-    </section>
 
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <h2 class="section-title">Sobre Mim</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>
-                        Sou um desenvolvedor apaixonado por tecnologia, com experiência em desenvolvimento 
-                        full stack utilizando Java, Python, JavaScript e MySQL. Minha jornada na programação 
-                        começou com a curiosidade de entender como as coisas funcionam por trás das telas.
-                    </p>
-                    <p>
-                        Atualmente, foco em criar soluções robustas e escaláveis, sempre buscando aprender 
-                        novas tecnologias e melhorar minhas habilidades. Acredito que a tecnologia deve ser 
-                        acessível e útil para todos.
-                    </p>
-                    <div class="about-stats">
-                        <div class="stat">
-                            <h3>4+</h3>
-                            <p>Projetos no GitHub</p>
-                        </div>
-                        <div class="stat">
-                            <h3>3+</h3>
-                            <p>Linguagens</p>
-                        </div>
-                        <div class="stat">
-                            <h3>2+</h3>
-                            <p>Anos de Experiência</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="about-image">
-                    <div class="code-snippet">
-                        <div class="code-header">
-                            <span class="code-title">thiago.js</span>
-                        </div>
-                        <div class="code-content">
-                            <pre><code>const thiago = {
-  name: "Thiago Henrique Santos",
-  role: "Full Stack Developer",
-  location: "São Paulo, SP",
-  skills: ["Java", "Python", "JavaScript", "MySQL"],
-  passion: "Desenvolvimento de soluções inovadoras",
-  contact: "thiagohmssantos@gmail.com"
-};</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="term" role="img" aria-label="Terminal mostrando o perfil do Thiago em formato JSON">
+          <div class="term-bar">
+            <div class="lights"><i></i><i></i><i></i></div>
+            <span class="mono">GET /perfil</span>
+            <span class="pill"><span class="dot"></span>200 OK</span>
+          </div>
+<pre><span class="t-mute">$</span> curl localhost:8080/perfil
+<span class="t-ok">HTTP/1.1 200 OK</span>  <span class="t-mute">· application/json</span>
+{
+  <span class="t-key">"nome"</span>: <span class="t-str">"Thiago Santos"</span>,
+  <span class="t-key">"cargo"</span>: <span class="t-str">"Dev Backend Java"</span>,
+  <span class="t-key">"stack"</span>: [<span class="t-str">"Java 21"</span>, <span class="t-str">"Spring Boot 3"</span>,
+            <span class="t-str">"PostgreSQL"</span>, <span class="t-str">"Docker"</span>],
+  <span class="t-key">"hoje"</span>: <span class="t-str">"Monitoramento @ NTT DATA"</span>,
+  <span class="t-key">"estudando"</span>: <span class="t-str">"Pós Java FIAP · AWS"</span>,
+  <span class="t-key">"uptimeEmTI"</span>: <span class="t-str" id="uptime">"2a 3m 28d"</span>,
+  <span class="t-key">"abertoAVagas"</span>: <span class="t-bool">true</span>
+}
+<span class="t-mute">$</span> <span class="cursor"></span></pre>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="projects">
-        <div class="container">
-            <h2 class="section-title">Meus Projetos</h2>
-            <div class="projects-grid">
-                <!-- Secret Number Project -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-emoji">🎮</div>
-                    </div>
-                    <div class="project-content">
-                        <h3>Secret Number</h3>
-                        <p>Jogo interativo desenvolvido em HTML/CSS/JavaScript onde o usuário deve adivinhar um número secreto.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">HTML</span>
-                            <span class="tech-tag">CSS</span>
-                            <span class="tech-tag">JavaScript</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/thibrown1/secret-number" target="_blank" class="project-link">
-                                <i class="fab fa-github"></i> Ver Código
-                            </a>
-                        </div>
-                    </div>
-                </div>
+<!-- ================= SERVICES ================= -->
+<section class="surface" id="servicos">
+  <div class="wrap">
+    <h2 class="big">O que eu <em>faço</em> <span class="slash">/</span></h2>
+    <div class="intro">
+      <span class="label">( competências )</span>
+      <p>Backend em Java do endpoint ao banco, com testes e deploy, mais a bagagem de quem monitora sistema crítico de madrugada.</p>
+    </div>
 
-                <!-- Site Marketing Project -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-emoji">📈</div>
-                    </div>
-                    <div class="project-content">
-                        <h3>Site Marketing</h3>
-                        <p>Website de marketing desenvolvido com foco em conversão e experiência do usuário.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">HTML</span>
-                            <span class="tech-tag">CSS</span>
-                            <span class="tech-tag">JavaScript</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/thibrown1/site_marketing" target="_blank" class="project-link">
-                                <i class="fab fa-github"></i> Ver Código
-                            </a>
-                        </div>
-                    </div>
-                </div>
+    <div style="margin-top:clamp(36px,5vw,60px)">
+      <div class="svc">
+        <h3><span class="n">(01)</span>APIs &amp; Backend Java</h3>
+        <p>APIs REST com Java 21 e Spring Boot 3, validação na borda, erros padronizados em ProblemDetail e documentação que o front consegue usar sem me chamar.</p>
+        <ul>
+          <li><i>01</i>REST com Spring Boot 3</li>
+          <li><i>02</i>Spring Security + JWT</li>
+          <li><i>03</i>OpenAPI / Swagger e Postman</li>
+        </ul>
+      </div>
+      <div class="svc">
+        <h3><span class="n">(02)</span>Arquitetura &amp; Qualidade</h3>
+        <p>Código separado em camadas que fazem sentido, regras de negócio protegidas no domínio e teste cobrindo o que importa antes de qualquer deploy.</p>
+        <ul>
+          <li><i>01</i>Clean Architecture, DDD e SOLID</li>
+          <li><i>02</i>JUnit 5, Mockito e JaCoCo</li>
+          <li><i>03</i>Testes de integração com H2 e Flyway</li>
+        </ul>
+      </div>
+      <div class="svc">
+        <h3><span class="n">(03)</span>Dados &amp; Infra</h3>
+        <p>Modelagem relacional, migrações versionadas e ambiente que sobe com um comando, do Docker local até o deploy na nuvem.</p>
+        <ul>
+          <li><i>01</i>PostgreSQL, SQL Server e Flyway</li>
+          <li><i>02</i>Docker e Docker Compose</li>
+          <li><i>03</i>Deploy no Render com Postgres no Neon</li>
+        </ul>
+      </div>
+      <div class="svc">
+        <h3><span class="n">(04)</span>Produção &amp; Observabilidade</h3>
+        <p>Experiência real acompanhando transações financeiras: leitura de logs, triagem de alertas, abertura e escalonamento de incidentes.</p>
+        <ul>
+          <li><i>01</i>Datadog, Splunk e Grafana</li>
+          <li><i>02</i>Incidentes no ServiceNow</li>
+          <li><i>03</i>Troubleshooting e diagnóstico em SQL</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-                <!-- Site em HTML Project -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-emoji">🌐</div>
-                    </div>
-                    <div class="project-content">
-                        <h3>Site em HTML</h3>
-                        <p>Website responsivo desenvolvido utilizando HTML puro com foco em performance e acessibilidade.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">HTML</span>
-                            <span class="tech-tag">CSS</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/thibrown1/site_em_html" target="_blank" class="project-link">
-                                <i class="fab fa-github"></i> Ver Código
-                            </a>
-                        </div>
-                    </div>
-                </div>
+<!-- ================= MARQUEE ================= -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Java 21 <b>•</b> Spring Boot <b>•</b> PostgreSQL <b>•</b> Docker <b>•</b> JWT <b>•</b> Clean Architecture <b>•</b> JUnit <b>•</b>&nbsp;</span>
+    <span>Java 21 <b>•</b> Spring Boot <b>•</b> PostgreSQL <b>•</b> Docker <b>•</b> JWT <b>•</b> Clean Architecture <b>•</b> JUnit <b>•</b>&nbsp;</span>
+  </div>
+</div>
 
-                <!-- Organizador Moderno Project -->
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-emoji">📋</div>
-                    </div>
-                    <div class="project-content">
-                        <h3>Organizador Moderno</h3>
-                        <p>Aplicação Java para organização de tarefas com interface moderna e funcionalidades avançadas.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Java</span>
-                            <span class="tech-tag">Swing</span>
-                            <span class="tech-tag">MySQL</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/thibrown1/Organizador_Moderno" target="_blank" class="project-link">
-                                <i class="fab fa-github"></i> Ver Código
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- ================= EXPERIENCE ================= -->
+<section id="experiencia">
+  <div class="wrap">
+    <h2 class="big">Carreira &amp; <em>experiência</em> <span class="slash">/</span></h2>
+    <div class="intro">
+      <span class="label">( trajetória )</span>
+      <p>Do suporte ao monitoramento, sempre perto de sistema rodando de verdade. O próximo passo é o desenvolvimento backend.</p>
+    </div>
+
+    <div class="timeline">
+      <article class="job now">
+        <div>
+          <div class="when">Ago/2026 – Atual</div>
+          <div class="where">São Paulo, SP · CLT</div>
         </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="skills">
-        <div class="container">
-            <h2 class="section-title">Habilidades Técnicas</h2>
-            <div class="skills-content">
-                <div class="skills-category">
-                    <h3>Linguagens de Programação</h3>
-                    <div class="skills-grid">
-                        <div class="skill-item">
-                            <div class="skill-emoji">☕</div>
-                            <span>Java</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-emoji">🐍</div>
-                            <span>Python</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-emoji">⚡</div>
-                            <span>JavaScript</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="skills-category">
-                    <h3>Desenvolvimento Web</h3>
-                    <div class="skills-grid">
-                        <div class="skill-item">
-                            <div class="skill-emoji">🌐</div>
-                            <span>HTML5</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-emoji">🎨</div>
-                            <span>CSS3</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-emoji">🗄️</div>
-                            <span>MySQL</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="skills-category">
-                    <h3>Ferramentas e Tecnologias</h3>
-                    <div class="skills-grid">
-                        <div class="skill-item">
-                            <div class="skill-emoji">🔧</div>
-                            <span>Git</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-emoji">🐙</div>
-                            <span>GitHub</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-emoji">💻</div>
-                            <span>VS Code</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div>
+          <h3>Analista de Monitoramento (BPO)</h3>
+          <div class="co">NTT DATA</div>
+          <ul>
+            <li>Monitoramento de transações de um grande banco do setor financeiro (PIX, emissores e bandeiras) com Datadog, Splunk e Grafana.</li>
+            <li>Triagem de alertas, abertura e acompanhamento de incidentes no ServiceNow, com escalonamento para os times responsáveis.</li>
+            <li>Indicadores e dashboards no QuickSight para acompanhar a saúde dos serviços ao longo do turno.</li>
+          </ul>
         </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title">Entre em Contato</h2>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h3>Vamos conversar!</h3>
-                    <p>Estou sempre aberto a novas oportunidades e projetos interessantes. Entre em contato comigo!</p>
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <i class="fas fa-envelope"></i>
-                            <span>thiagohmssantos@gmail.com</span>
-                        </div>
-                        <div class="contact-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>São Paulo, SP - Brasil</span>
-                        </div>
-                        <div class="contact-item">
-                            <i class="fab fa-linkedin"></i>
-                            <a href="https://www.linkedin.com/in/thiago-henrique-santos-000735277/" target="_blank">
-                                LinkedIn Profile
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      </article>
+      <article class="job">
+        <div>
+          <div class="when">Dez/2025 – Ago/2026</div>
+          <div class="where">Automação comercial</div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2024 Thiago Henrique Santos. Todos os direitos reservados.</p>
-                <div class="footer-links">
-                    <a href="https://github.com/thibrown1" target="_blank">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://www.linkedin.com/in/thiago-henrique-santos-000735277/" target="_blank">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="mailto:thiagohmssantos@gmail.com">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                </div>
-            </div>
+        <div>
+          <h3>Analista de Suporte Técnico N2</h3>
+          <div class="co">Datamaxi</div>
+          <ul>
+            <li>Suporte N2 a sistemas de automação para padarias e supermercados: PDV, comandas e balanças Toledo (MGV7).</li>
+            <li>Diagnóstico e correção direto no SQL Server: inserts em lote, chaves duplicadas e erros de conversão de data.</li>
+            <li>Validação de dados fiscais (ICMS, PIS/COFINS) e troubleshooting de rede TCP/IP e acesso remoto.</li>
+            <li>Abertura, tratativa e transferência de chamados no sistema interno de atendimento.</li>
+          </ul>
         </div>
-    </footer>
+      </article>
+      <article class="job">
+        <div>
+          <div class="when">Jul/2024 – Nov/2025</div>
+          <div class="where">Indústria</div>
+        </div>
+        <div>
+          <h3>Auxiliar de PCP</h3>
+          <div class="co">Hiper Holding</div>
+          <ul>
+            <li>Apoio ao planejamento e controle de produção com planilhas e controles, além de suporte de TI aos usuários internos.</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
 
-    <script src="script.js"></script>
+<!-- ================= PROJECTS ================= -->
+<section class="surface" id="projetos">
+  <div class="wrap">
+    <h2 class="big">Projetos em <em>destaque</em> <span class="slash">/</span></h2>
+    <div class="intro">
+      <span class="label">( 3 APIs )</span>
+      <p>Três APIs em Java pensadas como produto: regra de negócio de verdade, testes e um caminho até produção.</p>
+    </div>
+
+    <div class="projects">
+      <!-- ConectaMesa -->
+      <article class="proj">
+        <div>
+          <div class="proj-head mono"><span>( 01 )</span><span>Tech Challenge FIAP</span><span>2026</span></div>
+          <h3>ConectaMesa API</h3>
+          <div class="tag">Gestão de restaurantes, cardápios e usuários</div>
+          <p class="desc">API do Tech Challenge da pós FIAP. Na Fase 1 entreguei antes do prazo o CRUD de usuários com login, troca de senha e os dois desafios extras: Spring Security com JWT e testes com JUnit e Mockito. Na Fase 2 o projeto foi para Clean Architecture, com tipos de usuário, restaurantes e itens de cardápio, migrações Flyway e meta de 80% de cobertura.</p>
+          <div class="chips">
+            <span class="chip">Java 21</span><span class="chip">Spring Boot 3</span><span class="chip">Spring Security</span><span class="chip">JWT</span><span class="chip">PostgreSQL</span><span class="chip">Flyway</span><span class="chip">Docker Compose</span><span class="chip">JUnit 5</span><span class="chip">Mockito</span>
+          </div>
+          <div class="links">
+            <a class="link" href="https://github.com/thibrown1/tech-challenge-usuario" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+              Ver código
+            </a>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-top"><span class="svc-name">conectamesa-api</span><span class="pill warn"><span class="dot warn"></span>Fase 2</span></div>
+          <dl class="kv">
+            <div><dt>arquitetura</dt><dd>Clean Architecture · DDD</dd></div>
+            <div><dt>recursos</dt><dd>usuários · tipos · restaurantes · cardápio</dd></div>
+            <div><dt>segurança</dt><dd>JWT · BCrypt</dd></div>
+            <div><dt>erros</dt><dd>ProblemDetail (RFC 7807)</dd></div>
+            <div><dt>docs</dt><dd>Swagger · coleção Postman</dd></div>
+          </dl>
+          <div class="flow"><span class="step">HTTP</span><span class="arr">→</span><span class="step">Controller</span><span class="arr">→</span><span class="step">UseCase</span><span class="arr">→</span><span class="step">Gateway</span><span class="arr">→</span><span class="step">PostgreSQL</span></div>
+        </div>
+      </article>
+
+      <!-- Margem -->
+      <article class="proj">
+        <div>
+          <div class="proj-head mono"><span>( 02 )</span><span>Projeto pessoal</span><span>2026</span></div>
+          <h3>Margem</h3>
+          <div class="tag">Lucro real para quem vende na Shopee</div>
+          <p class="desc">Nasceu da loja de um familiar: o painel do marketplace mostra o faturamento, mas não quanto sobra. A API calcula o lucro de cada venda depois de comissão, frete e custos, simula faixas de taxa, rateia custos fixos, importa pedidos por planilha ou pela API da Shopee e manda alertas pelo Telegram.</p>
+          <div class="chips">
+            <span class="chip">Java 21</span><span class="chip">Spring Boot 3.5</span><span class="chip">PostgreSQL</span><span class="chip">Flyway</span><span class="chip">JWT</span><span class="chip">Docker</span><span class="chip">API Shopee</span><span class="chip">Telegram</span>
+          </div>
+          <div class="links">
+            <a class="link" href="https://github.com/thibrown1/margem" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+              Ver código
+            </a>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-top"><span class="svc-name">margem-api</span><span class="pill info"><span class="dot" style="background:#a9c9ff;animation:none"></span>110 testes</span></div>
+          <dl class="kv">
+            <div><dt>domínio</dt><dd>calculadora de lucro · simulador de taxas</dd></div>
+            <div><dt>entrada</dt><dd>planilha · API Shopee</dd></div>
+            <div><dt>alertas</dt><dd>Telegram Bot API</dd></div>
+            <div><dt>banco</dt><dd>PostgreSQL + Flyway</dd></div>
+            <div><dt>extra</dt><dd>versão web no navegador para a loja usar</dd></div>
+          </dl>
+          <div class="flow"><span class="step">Pedidos</span><span class="arr">→</span><span class="step">Taxas</span><span class="arr">→</span><span class="step">Lucro real</span><span class="arr">→</span><span class="step">Alerta</span></div>
+        </div>
+      </article>
+
+      <!-- GastosXP -->
+      <article class="proj">
+        <div>
+          <div class="proj-head mono"><span>( 03 )</span><span>Projeto pessoal · no ar</span><span>2026</span></div>
+          <h3>GastosXP</h3>
+          <div class="tag">Controle de gastos do casal, sem app pago</div>
+          <p class="desc">Controle de gastos compartilhado. A API entende lançamentos em texto livre (pensada para um bot de WhatsApp pela API oficial da Meta), calcula orçamento por dia, semana e mês com rateio proporcional e gera dicas a partir do padrão de gastos. O painel web está no ar no Render com Postgres no Neon.</p>
+          <div class="chips">
+            <span class="chip">Java 21</span><span class="chip">Spring Boot 3.5</span><span class="chip">PostgreSQL (Neon)</span><span class="chip">Render</span><span class="chip">WhatsApp Cloud API</span><span class="chip">JUnit 5</span>
+          </div>
+          <div class="links">
+            <a class="link" href="https://caderneta-zap.onrender.com" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+              Abrir app
+            </a>
+            <a class="link" href="https://github.com/thibrown1/caderneta-zap" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+              Ver código
+            </a>
+          </div>
+          <span class="hint">Hospedagem gratuita: o primeiro acesso pode levar até 1 minuto para acordar o servidor.</span>
+        </div>
+        <div class="panel">
+          <div class="panel-top"><span class="svc-name">gastosxp</span><span class="pill"><span class="dot"></span>No ar</span></div>
+          <dl class="kv">
+            <div><dt>deploy</dt><dd>Render · Postgres no Neon</dd></div>
+            <div><dt>visões</dt><dd>dia · semana · mês</dd></div>
+            <div><dt>integração</dt><dd>webhook WhatsApp Cloud API</dd></div>
+            <div><dt>testes</dt><dd>60+ · JUnit 5</dd></div>
+            <div><dt>interface</dt><dd>painel web dark mode</dd></div>
+          </dl>
+          <div class="flow"><span class="step">Mensagem</span><span class="arr">→</span><span class="step">Parser</span><span class="arr">→</span><span class="step">Orçamento</span><span class="arr">→</span><span class="step">Dicas</span><span class="arr">→</span><span class="step">Painel</span></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="more">
+      <h3>Outros projetos</h3>
+      <div class="rows">
+        <div class="row"><div class="nm">App de gestão para clínica de estética</div><div class="ds">Agenda interativa, KPIs no dashboard, controle de estoque e relatórios em PDF e Excel.</div><div class="tc">React Native · Expo · Firebase</div><div class="yr">2026</div></div>
+        <div class="row"><div class="nm">Editor automático de Reels</div><div class="ds">Transcreve a fala, coloca legenda palavra por palavra, zoom por palavra-chave e música com ducking. Roda com dois cliques no Windows.</div><div class="tc">Python · FFmpeg · Whisper</div><div class="yr">2026</div></div>
+        <div class="row"><div class="nm">Conversor de arquivos</div><div class="ds">Converte Excel, Word, PowerPoint, PDF e imagens direto no navegador, sem enviar o arquivo para servidor.</div><div class="tc">JavaScript · PDF.js · SheetJS · jsPDF</div><div class="yr">2026</div></div>
+        <div class="row"><div class="nm">Site da clínica Estética By Larissa Caetano</div><div class="ds">Site institucional com seletor de serviços por área do rosto e agendamento pelo WhatsApp.</div><div class="tc">HTML · CSS · JavaScript</div><div class="yr">2026</div></div>
+        <div class="row"><div class="nm">Catálogo de produtos Braxon</div><div class="ds">Catálogo em PDF de várias páginas para uma empresa de produtos de limpeza, gerado inteiro por código.</div><div class="tc">Python · ReportLab</div><div class="yr">2026</div></div>
+        <div class="row"><div class="nm">PDV de padaria</div><div class="ds">Estudo de fundamentos em Java puro: classes, listas, carrinho e fechamento de venda. Em construção.</div><div class="tc">Java · console</div><div class="yr">2026</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="rounded-b" id="sobre">
+  <div class="wrap">
+    <h2 class="big">Suporte, monitoramento, <em>backend</em> <span class="slash">/</span></h2>
+    <div class="about-grid">
+      <span class="label">( sobre mim )</span>
+      <div class="about-body">
+        <p class="first">Sou formado em Análise e Desenvolvimento de Sistemas e estou fazendo a transição para desenvolvimento backend com Java.</p>
+        <p>Comecei na TI resolvendo problema dos outros: balança que não sincronizava, PDV travado, banco de dados com registro duplicado às 7 da manhã de uma padaria. Depois fui para o monitoramento de transações financeiras na NTT DATA, onde um alerta mal investigado vira cliente sem conseguir pagar.</p>
+        <p>Esse caminho mudou o jeito que eu escrevo código. Penso em quem vai ler o log, em mensagem de erro que explica o problema e em teste que pega o bug antes do deploy. Na pós da FIAP estou aprofundando arquitetura, Spring e boas práticas, e em paralelo construo ferramentas que resolvem problema real para negócios da família.</p>
+      </div>
+    </div>
+
+    <div class="edu">
+      <article>
+        <span class="yr">2026 – 2027</span>
+        <h4>Pós-graduação em Arquitetura e Desenvolvimento Java</h4>
+        <p>FIAP · Fase 1 "Spring Explorer" concluída com certificado (Docker, Spring MVC, APIs RESTful, OOP e SOLID).</p>
+      </article>
+      <article>
+        <span class="yr">2023 – 2025</span>
+        <h4>Tecnólogo em Análise e Desenvolvimento de Sistemas</h4>
+        <p>Universidade Metodista de São Paulo (UMESP).</p>
+      </article>
+      <article>
+        <span class="yr">Concluído</span>
+        <h4>Técnico em Informática</h4>
+        <p>SENAI.</p>
+      </article>
+      <article>
+        <span class="yr">Em estudo</span>
+        <h4>AWS Certified Cloud Practitioner</h4>
+        <p>Próximo passo da trilha de cloud, rumo à AWS Developer Associate.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STACK ================= -->
+<section class="surface" id="stack">
+  <div class="wrap">
+    <h2 class="stack-head">Minha <em>stack</em></h2>
+    <div class="groups">
+      <div class="group">
+        <h4>Backend</h4>
+        <div class="tools">
+          <span class="tool"><i style="--c:#e76f00">Jv</i>Java 21</span>
+          <span class="tool"><i style="--c:#5fa04e">Sb</i>Spring Boot</span>
+          <span class="tool"><i style="--c:#4c8c2b">Sc</i>Spring Security</span>
+          <span class="tool"><i style="--c:#59666c">Jp</i>Spring Data JPA</span>
+          <span class="tool"><i style="--c:#c71a36">Mv</i>Maven</span>
+          <span class="tool"><i style="--c:#7a3fd1">Jw</i>JWT</span>
+          <span class="tool"><i style="--c:#6b9a23">Sw</i>Swagger / OpenAPI</span>
+        </div>
+      </div>
+      <div class="group">
+        <h4>Dados</h4>
+        <div class="tools">
+          <span class="tool"><i style="--c:#336791">Pg</i>PostgreSQL</span>
+          <span class="tool"><i style="--c:#a91d22">Sq</i>SQL Server</span>
+          <span class="tool"><i style="--c:#cc0200">Fw</i>Flyway</span>
+          <span class="tool"><i style="--c:#00a35c">Ne</i>Neon</span>
+          <span class="tool"><i style="--c:#f5820d">Fb</i>Firebase</span>
+        </div>
+      </div>
+      <div class="group">
+        <h4>Qualidade &amp; Arquitetura</h4>
+        <div class="tools">
+          <span class="tool"><i style="--c:#25a162">Ju</i>JUnit 5</span>
+          <span class="tool"><i style="--c:#7b8f3a">Mk</i>Mockito</span>
+          <span class="tool"><i style="--c:#b0372d">Jc</i>JaCoCo</span>
+          <span class="tool"><i style="--c:#ff6c37">Pm</i>Postman</span>
+          <span class="tool"><i style="--c:#2d6ae0">CA</i>Clean Architecture</span>
+          <span class="tool"><i style="--c:#3d5a80">DD</i>DDD · SOLID</span>
+        </div>
+      </div>
+      <div class="group">
+        <h4>Infra &amp; Cloud</h4>
+        <div class="tools">
+          <span class="tool"><i style="--c:#1d63ed">Dk</i>Docker</span>
+          <span class="tool"><i style="--c:#2b7bd9">Dc</i>Docker Compose</span>
+          <span class="tool"><i style="--c:#f05033">Gt</i>Git / GitHub</span>
+          <span class="tool"><i style="--c:#46e3b7;color:#09251c">Rd</i>Render</span>
+          <span class="tool soft"><i style="--c:#ff9900;color:#231500">Aw</i>AWS (estudando)</span>
+        </div>
+      </div>
+      <div class="group">
+        <h4>Observabilidade &amp; Operação</h4>
+        <div class="tools">
+          <span class="tool"><i style="--c:#632ca6">Dd</i>Datadog</span>
+          <span class="tool"><i style="--c:#65a637">Sp</i>Splunk</span>
+          <span class="tool"><i style="--c:#f46800">Gf</i>Grafana</span>
+          <span class="tool"><i style="--c:#2a6fdb">Qs</i>QuickSight</span>
+          <span class="tool"><i style="--c:#62d84e;color:#0d2a08">Sn</i>ServiceNow</span>
+        </div>
+      </div>
+      <div class="group">
+        <h4>Também uso</h4>
+        <div class="tools">
+          <span class="tool"><i style="--c:#f0db4f;color:#2a2400">Js</i>JavaScript</span>
+          <span class="tool"><i style="--c:#20232a;color:#61dafb">RN</i>React Native</span>
+          <span class="tool"><i style="--c:#3776ab">Py</i>Python</span>
+          <span class="tool"><i style="--c:#007808">Ff</i>FFmpeg</span>
+          <span class="tool"><i style="--c:#e34f26">Ht</i>HTML / CSS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contato">
+  <div class="wrap">
+    <span class="label">( contato )</span>
+    <h2 class="big" style="margin-top:14px">Vamos <em>conversar</em> <span class="slash">/</span></h2>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p class="lede">Tem uma vaga de backend Java, um projeto ou quer trocar uma ideia sobre Spring? Me chama, respondo rápido.</p>
+        <div class="ci">
+          <h4>E-mail</h4>
+          <a href="mailto:thiagohmssantos@gmail.com" id="emailLink">thiagohmssantos@gmail.com</a><button class="copy" type="button" id="copyEmail">copiar</button>
+        </div>
+        <div class="ci">
+          <h4>LinkedIn</h4>
+          <a href="https://www.linkedin.com/in/thiago-santos-000735277" target="_blank" rel="noopener">in/thiago-santos-000735277</a>
+        </div>
+        <div class="ci">
+          <h4>GitHub</h4>
+          <a href="https://github.com/thibrown1" target="_blank" rel="noopener">github.com/thibrown1</a>
+        </div>
+        <div class="ci">
+          <h4>Localização</h4>
+          <span>São Bernardo do Campo, SP</span>
+        </div>
+      </div>
+
+      <form id="contactForm" novalidate>
+        <div class="field"><label for="f-nome">Seu nome</label><input id="f-nome" name="nome" autocomplete="name" required></div>
+        <div class="field"><label for="f-email">Seu e-mail</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="f-msg">Como posso ajudar?</label><textarea id="f-msg" name="mensagem" required></textarea></div>
+        <div><button class="btn btn-primary" type="submit">Enviar mensagem</button></div>
+        <p class="form-note" id="formNote" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="ghost" aria-hidden="true">Thiago Santos</div>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p class="foot-big">Código que<span>aguenta produção.</span></p>
+        <div class="ctas"><a class="btn btn-primary" href="#contato">Falar comigo</a><a class="btn btn-ghost" id="cvBtn2" href="#" hidden>Baixar CV</a></div>
+      </div>
+      <div class="foot-side">
+        <div>
+          <h4>Redes</h4>
+          <div class="foot-links">
+            <a class="icon-btn" href="https://github.com/thibrown1" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg></a>
+            <a class="icon-btn" href="https://www.linkedin.com/in/thiago-santos-000735277" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg></a>
+            <a class="icon-btn" href="mailto:thiagohmssantos@gmail.com" aria-label="E-mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <h4>Contato</h4>
+          <a href="mailto:thiagohmssantos@gmail.com" style="text-decoration:none;font-weight:600">thiagohmssantos@gmail.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year">2026</span> Thiago Henrique de Morais Santana Santos</span>
+      <span class="mono">construir · testar · monitorar</span>
+    </div>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" type="button" aria-label="Voltar ao topo">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+/* ===== Configuração rápida =====
+   CV_URL: coloque o link do seu currículo (ex.: "cv-thiago-santos.pdf" na mesma pasta, ou um link do Google Drive).
+   Enquanto estiver vazio, os botões "Baixar CV" ficam escondidos. */
+const CV_URL = "";
+const EMAIL = "thiagohmssantos@gmail.com";
+const INICIO_EM_TI = new Date(2024, 6, 1); // jul/2024
+
+(function(){
+  // CV
+  if (CV_URL) for (const id of ["cvBtn","cvBtn2"]) { const b=document.getElementById(id); b.href=CV_URL; b.target="_blank"; b.rel="noopener"; b.hidden=false; }
+
+  // ano no rodapé
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // tempo em TI (uptime)
+  const now = new Date();
+  let y = now.getFullYear()-INICIO_EM_TI.getFullYear(), m = now.getMonth()-INICIO_EM_TI.getMonth(), d = now.getDate()-INICIO_EM_TI.getDate();
+  if (d < 0) { m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+  if (m < 0) { y--; m += 12; }
+  document.getElementById("uptime").textContent = `"${y}a ${m}m ${d}d"`;
+
+  // header ao rolar + botão topo
+  const top = document.getElementById("top"), toTop = document.getElementById("toTop");
+  const onScroll = () => { const s = window.scrollY > 40; top.classList.toggle("scrolled", s); toTop.classList.toggle("show", window.scrollY > 700); };
+  window.addEventListener("scroll", onScroll, {passive:true}); onScroll();
+  toTop.addEventListener("click", () => window.scrollTo({top:0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}));
+
+  // menu mobile
+  const nav = document.getElementById("nav"), btn = document.getElementById("menuBtn");
+  btn.addEventListener("click", () => { const o = nav.classList.toggle("open"); btn.setAttribute("aria-expanded", o); });
+  nav.addEventListener("click", e => { if (e.target.tagName === "A") { nav.classList.remove("open"); btn.setAttribute("aria-expanded", false); } });
+
+  // seção ativa no menu
+  const links = [...nav.querySelectorAll("a")];
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => { if (en.isIntersecting) links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id)); });
+    }, {rootMargin:"-45% 0px -50% 0px"});
+    ["servicos","experiencia","projetos","sobre","contato"].forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
+  }
+
+  // copiar e-mail
+  const copyBtn = document.getElementById("copyEmail");
+  copyBtn.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(EMAIL); copyBtn.textContent = "copiado"; }
+    catch(e) { copyBtn.textContent = "selecione e copie"; }
+    setTimeout(() => copyBtn.textContent = "copiar", 2000);
+  });
+
+  // formulário: abre o app de e-mail com a mensagem pronta (site estático, sem servidor)
+  const form = document.getElementById("contactForm"), note = document.getElementById("formNote");
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const nome = form.nome.value.trim(), email = form.email.value.trim(), msg = form.mensagem.value.trim();
+    if (!nome || !email || !msg) { note.textContent = "Preencha nome, e-mail e mensagem para continuar."; return; }
+    const assunto = encodeURIComponent(`Contato pelo portfólio: ${nome}`);
+    const corpo = encodeURIComponent(`${msg}\n\n${nome}\n${email}`);
+    note.textContent = `Abrindo seu app de e-mail com a mensagem pronta. Se ele não abrir, envie para ${EMAIL}.`;
+    window.location.href = `mailto:${EMAIL}?subject=${assunto}&body=${corpo}`;
+  });
+
+  // céu estrelado
+  const cv = document.getElementById("stars"), ctx = cv.getContext("2d");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W, H, stars = [], dpr = Math.min(window.devicePixelRatio || 1, 2);
+  function resize(){
+    W = innerWidth; H = innerHeight; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    const n = Math.round(W*H/9000);
+    stars = Array.from({length:n}, () => ({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.1+.2, p:Math.random()*Math.PI*2, s:.4+Math.random()*1.4, v:.02+Math.random()*.08}));
+  }
+  function draw(t){
+    ctx.clearRect(0,0,W,H);
+    for (const st of stars){
+      const a = reduce ? .55 : .25 + .6*(.5+.5*Math.sin(st.p + t*.001*st.s));
+      ctx.globalAlpha = a; ctx.fillStyle = st.r > 1 ? "#a9c9ff" : "#e9eef3";
+      ctx.beginPath(); ctx.arc(st.x, st.y, st.r, 0, Math.PI*2); ctx.fill();
+      if (!reduce){ st.y -= st.v; if (st.y < -2) { st.y = H+2; st.x = Math.random()*W; } }
+    }
+    if (!reduce) requestAnimationFrame(draw);
+  }
+  resize(); addEventListener("resize", resize); requestAnimationFrame(draw);
+})();
+</script>
 </body>
 </html>
