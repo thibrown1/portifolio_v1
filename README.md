@@ -2,7 +2,7 @@
 
 Site pessoal onde apresento minha trajetória como desenvolvedor backend Java: experiência, projetos, stack e contato.
 
-**Acesse:** https://portif-lio-jet-three.vercel.app
+**Acesse:** https://thiago-santos.vercel.app
 
 ## Seções
 
